@@ -15,10 +15,10 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);String[] itemList = { "Заявки", "Авторизация" };
+		setContentView(R.layout.activity_main);String[] itemList = { "В«Р°В¤РІРєРё", "СРІС‚РѕСЂРёР·Р°С†РёВ¤" };
 		
 		ListView mainList = (ListView) this.findViewById(R.id.main);
-		// создаем адаптер
+		// СЃРѕР·РґР°РµРј Р°РґР°РїС‚РµСЂ
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
 				android.R.layout.simple_list_item_1, itemList);
 		mainList.setAdapter(adapter);
@@ -32,17 +32,17 @@ public class MainActivity extends Activity {
 				switch (position) {
 				case 0: {
 					Intent intent = new Intent(MainActivity.this,
-							RequestsActivity.class); // описывает активити, которое
-													// будем запускать
+							RequestsActivity.class); // РѕРїРёСЃС‹РІР°РµС‚ Р°РєС‚РёРІРёС‚Рё, РєРѕС‚РѕСЂРѕРµ
+													// Р±СѓРґРµРј Р·Р°РїСѓСЃРєР°С‚СЊ
 					startActivity(intent);
 				}
 					break;
 
 				case 1: {
 					Intent intent = new Intent(MainActivity.this,
-							AutorizationActivity.class); // описывает активити,
-													// которое
-													// будем запускать
+							AutorizationActivity.class); // РѕРїРёСЃС‹РІР°РµС‚ Р°РєС‚РёРІРёС‚Рё,
+													// РєРѕС‚РѕСЂРѕРµ
+													// Р±СѓРґРµРј Р·Р°РїСѓСЃРєР°С‚СЊ
 					startActivity(intent);
 				}
 					break;

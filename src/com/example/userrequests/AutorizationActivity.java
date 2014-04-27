@@ -94,7 +94,7 @@ public class AutorizationActivity extends Activity {
 												.getString("UserId"));
 										iDD = id;
 										if (sk.length() > 30) {
-											return "Неправильный логин и/или пароль";
+											return "РќРµРїСЂР°РІРёР»СЊРЅС‹Р№ Р»РѕРіРёРЅ Рё/РёР»Рё РїР°СЂРѕР»СЊ";
 										}
 
 									}
@@ -106,13 +106,13 @@ public class AutorizationActivity extends Activity {
 								} catch (OutOfMemoryError e) {
 									Log.w("connection", "Out of memory!!!");
 
-									return "Все очень плохо...";
+									return "Р’СЃРµ РѕС‡РµРЅСЊ РїР»РѕС…Рѕ...";
 
 								} catch (JSONException e) {
 									// TODO Auto-generated catch block
 									e.printStackTrace();
 								}
-								return "Неправильный логин и/или пароль";
+								return "РќРµРїСЂР°РІРёР»СЊРЅС‹Р№ Р»РѕРіРёРЅ Рё/РёР»Рё РїР°СЂРѕР»СЊ";
 							}
 						}
 					}
