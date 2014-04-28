@@ -20,7 +20,7 @@ public class RequestsActivity extends Activity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(RequestsActivity.this,
-                        AddRequestActivity.class); // описывает
+                        AddRequestActivity.class); // РѕРїРёСЃС‹РІР°РµС‚
                 startActivity(intent);
             }
         });

@@ -15,10 +15,10 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);String[] itemList = { "Заявки", "Авторизация" };
+		setContentView(R.layout.activity_main);String[] itemList = { "Р—Р°СЏРІРєРё", "РђРІС‚РѕСЂРёР·Р°С†РёСЏ" };
 		
 		ListView mainList = (ListView) this.findViewById(R.id.main);
-		// создаем адаптер
+		// СЃРѕР·РґР°РµРј Р°РґР°РїС‚РµСЂ
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
 				android.R.layout.simple_list_item_1, itemList);
 		mainList.setAdapter(adapter);
