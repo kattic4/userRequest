@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import android.util.Pair;
+import android.widget.Toast;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -32,13 +34,12 @@ public class AutorizationActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_autorization);
-
 		final EditText nameUs = (EditText) this.findViewById(R.id.nameUs);
 		final String nameUser = nameUs.getText().toString();
 
 		final EditText pass = (EditText) this.findViewById(R.id.pass);
 		final String passUser = pass.getText().toString();
-
+        Log.d("myDebugTest", "Это, отладочная печать, используй ее для отладки, Катя!!!");
 		final TextView synchText = (TextView) this.findViewById(R.id.result);
 		final String sText = synchText.getText().toString();
 
@@ -46,26 +47,29 @@ public class AutorizationActivity extends Activity {
 		synchButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+
 				AutorizationActivity.this.runOnUiThread(new Runnable() {
 					// we are sorry T_T we couldn't write this function in 50
 					// strings=)
 					@Override
 					public void run() {
 						String textSynch;
-						// TODO Auto-generated method stub
-						class DownloadFilesTask extends
-								AsyncTask<Void, Void, String> {
-							protected String doInBackground(Void... urls) {
+                        Log.d("myDebugTest", "нажата кнопка run в синхронизации");
 
+						class DownloadFilesTask extends AsyncTask<Void, Void, String> {
+
+							protected String doInBackground(Void... urls) {
+                                Log.d("myDebugTest", "до");
 								String iUrl2 = "http://servicetech.apphb.com/api/Auth/login?login="
 										+ nameUs.getText().toString()
-										+ "&password="
+										+ "&pass="
 										+ pass.getText().toString();
-								
-								HttpURLConnection conn = null;
+                                Log.d("myDebugTest", iUrl2);
+
+                                HttpURLConnection conn = null;
 
 								int iDD;
-								
+
 								try {
 									HttpURLConnection conn2 = null;
 
@@ -86,6 +90,7 @@ public class AutorizationActivity extends Activity {
 										BufferedReader r2 = new BufferedReader(
 												new InputStreamReader(in2));
 										content2 = r2.readLine();
+                                        Log.d("myDebugTest", "content2=" + content2);
 										JSONObject subcontent2;
 										subcontent2 = new JSONObject(content2);
 										String sk = subcontent2
@@ -115,6 +120,20 @@ public class AutorizationActivity extends Activity {
 								return "Эхехехей. Вы прошли авторизацию";
 							}
 						}
+
+                        String result = "";
+                        DownloadFilesTask downloadFilesTask = new DownloadFilesTask();
+                        downloadFilesTask.execute();
+                        try {
+                            result = downloadFilesTask.get();
+                        } catch (InterruptedException e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        } catch (ExecutionException e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        }
+                        Log.d("myDebugTest", "result=" + result);
 					}
 				});
 			}
