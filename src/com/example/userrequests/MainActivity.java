@@ -15,10 +15,10 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);String[] itemList = { "«а¤вки", "јвторизаци¤" };
+		setContentView(R.layout.activity_main);String[] itemList = { "������", "�����������" };
 		
 		ListView mainList = (ListView) this.findViewById(R.id.main);
-		// создаем адаптер
+		// ������� �������
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
 				android.R.layout.simple_list_item_1, itemList);
 		mainList.setAdapter(adapter);
@@ -32,17 +32,14 @@ public class MainActivity extends Activity {
 				switch (position) {
 				case 0: {
 					Intent intent = new Intent(MainActivity.this,
-							RequestsActivity.class); // описывает активити, которое
-													// будем запускать
+							RequestsActivity.class); 
 					startActivity(intent);
 				}
 					break;
 
 				case 1: {
 					Intent intent = new Intent(MainActivity.this,
-							AutorizationActivity.class); // описывает активити,
-													// которое
-													// будем запускать
+							AutorizationActivity.class); 
 					startActivity(intent);
 				}
 					break;

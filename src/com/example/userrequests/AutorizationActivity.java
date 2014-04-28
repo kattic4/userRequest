@@ -94,7 +94,7 @@ public class AutorizationActivity extends Activity {
 												.getString("UserId"));
 										iDD = id;
 										if (sk.length() > 30) {
-											return "РќРµРїСЂР°РІРёР»СЊРЅС‹Р№ Р»РѕРіРёРЅ Рё/РёР»Рё РїР°СЂРѕР»СЊ";
+											return "Тут просто пока что проверка. To be continued...";
 										}
 
 									}
@@ -106,13 +106,13 @@ public class AutorizationActivity extends Activity {
 								} catch (OutOfMemoryError e) {
 									Log.w("connection", "Out of memory!!!");
 
-									return "Р’СЃРµ РѕС‡РµРЅСЊ РїР»РѕС…Рѕ...";
+									return "Все очень плохо...";
 
 								} catch (JSONException e) {
 									// TODO Auto-generated catch block
 									e.printStackTrace();
 								}
-								return "РќРµРїСЂР°РІРёР»СЊРЅС‹Р№ Р»РѕРіРёРЅ Рё/РёР»Рё РїР°СЂРѕР»СЊ";
+								return "Эхехехей. Вы прошли авторизацию";
 							}
 						}
 					}
