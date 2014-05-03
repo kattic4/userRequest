@@ -30,96 +30,101 @@ import android.widget.TextView;
 
 public class AutorizationActivity extends Activity {
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_autorization);
-		final EditText nameUs = (EditText) this.findViewById(R.id.nameUs);
-		final String nameUser = nameUs.getText().toString();
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_autorization);
+        final EditText nameUs = (EditText) this.findViewById(R.id.nameUs);
+        final String nameUser = nameUs.getText().toString();
 
-		final EditText pass = (EditText) this.findViewById(R.id.pass);
-		final String passUser = pass.getText().toString();
-        Log.d("myDebugTest", "Это, отладочная печать, используй ее для отладки, Катя!!!");
-		final TextView synchText = (TextView) this.findViewById(R.id.result);
-		final String sText = synchText.getText().toString();
+        final EditText pass = (EditText) this.findViewById(R.id.pass);
+        final String passUser = pass.getText().toString();
+        Log.d("myDebugTest",
+                "Это, отладочная печать, используй ее для отладки, Катя!!!");
+        final TextView synchText = (TextView) this.findViewById(R.id.result);
+        final String sText = synchText.getText().toString();
 
-		Button synchButton = (Button) this.findViewById(R.id.btnSynch);
-		synchButton.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
+        // начинаем авторизацию на сервере
+        Button synchButton = (Button) this.findViewById(R.id.btnSynch);
+        synchButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-				AutorizationActivity.this.runOnUiThread(new Runnable() {
-					// we are sorry T_T we couldn't write this function in 50
-					// strings=)
-					@Override
-					public void run() {
-						String textSynch;
-                        Log.d("myDebugTest", "нажата кнопка run в синхронизации");
+                AutorizationActivity.this.runOnUiThread(new Runnable() {
 
-						class DownloadFilesTask extends AsyncTask<Void, Void, String> {
+                    @Override
+                    public void run() {
+                        String textSynch;
+                        Log.d("myDebugTest",
+                                "нажата кнопка run в синхронизации");
 
-							protected String doInBackground(Void... urls) {
+                        class DownloadFilesTask extends
+                                AsyncTask<Void, Void, String> {
+
+                            protected String doInBackground(Void... urls) {
                                 Log.d("myDebugTest", "до");
-								String iUrl2 = "http://servicetech.apphb.com/api/Auth/login?login="
-										+ nameUs.getText().toString()
-										+ "&pass="
-										+ pass.getText().toString();
+                                String iUrl2 = "http://servicetech.apphb.com/api/Auth/login?login="
+                                        + nameUs.getText().toString()
+                                        + "&pass=" + pass.getText().toString();
                                 Log.d("myDebugTest", iUrl2);
 
                                 HttpURLConnection conn = null;
 
-								int iDD;
+                                int iDD;
 
-								try {
-									HttpURLConnection conn2 = null;
+                                try {
+                                    HttpURLConnection conn2 = null;
 
-									Log.v("connection",
-											"Starting loading image by URL: "
-													+ iUrl2);
-									conn2 = (HttpURLConnection) new URL(iUrl2)
-											.openConnection();
-									conn2.setDoInput(true);
-									String content2;
-									content2 = "paaaaaaaaaaain";
-									conn2.connect();
-									int responseCode2 = conn2.getResponseCode();
+                                    Log.v("connection",
+                                            "Starting loading image by URL: "
+                                                    + iUrl2);
+                                    conn2 = (HttpURLConnection) new URL(iUrl2)
+                                            .openConnection();
+                                    conn2.setDoInput(true);
+                                    String content2;
+                                    content2 = "paaaaaaaaaaain";
+                                    conn2.connect();
+                                    int responseCode2 = conn2.getResponseCode();
 
-									if (responseCode2 == HttpURLConnection.HTTP_OK) {
-										InputStream in2 = conn2
-												.getInputStream();
-										BufferedReader r2 = new BufferedReader(
-												new InputStreamReader(in2));
-										content2 = r2.readLine();
-                                        Log.d("myDebugTest", "content2=" + content2);
-										JSONObject subcontent2;
-										subcontent2 = new JSONObject(content2);
-										String sk = subcontent2
-												.getString("SessionKey");
-										int id = Integer.parseInt(subcontent2
-												.getString("UserId"));
-										iDD = id;
-										if (sk.length() > 30) {
-											return "Тут просто пока что проверка. To be continued...";
-										}
+                                    if (responseCode2 == HttpURLConnection.HTTP_OK) {
+                                        InputStream in2 = conn2
+                                                .getInputStream();
+                                        BufferedReader r2 = new BufferedReader(
+                                                new InputStreamReader(in2));
+                                        content2 = r2.readLine();
+                                        Log.d("myDebugTest", "content2="
+                                                + content2);
+                                        JSONObject subcontent2;
+                                        subcontent2 = new JSONObject(content2);
+                                        String sk = subcontent2
+                                                .getString("SessionKey");
+                                        int id = Integer.parseInt(subcontent2
+                                                .getString("response"));
+                                        iDD = id;
+                                        if (sk.length() > 30) {
+                                            return "Тут просто пока что проверка. To be continued...";
+                                        }
 
-									}
-								} catch (MalformedURLException ex) {
-									Log.e("connection", ex.getMessage());
-								} catch (IOException e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
-								} catch (OutOfMemoryError e) {
-									Log.w("connection", "Out of memory!!!");
+                                    }
 
-									return "Все очень плохо...";
+                                } catch (MalformedURLException ex) {
+                                    Log.e("connection", ex.getMessage());
+                                } catch (IOException e) {
+                                    // TODO Auto-generated catch block
+                                    e.printStackTrace();
+                                } catch (OutOfMemoryError e) {
+                                    Log.w("connection", "Out of memory!!!");
 
-								} catch (JSONException e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
-								}
-								return "Эхехехей. Вы прошли авторизацию";
-							}
-						}
+                                    return "Все очень плохо...";
+
+                                } catch (JSONException e) {
+                                    // TODO Auto-generated catch block
+                                    e.printStackTrace();
+                                }
+
+                                return "Эхехехей. Вы прошли авторизацию";
+                            }
+                        }
 
                         String result = "";
                         DownloadFilesTask downloadFilesTask = new DownloadFilesTask();
@@ -134,17 +139,123 @@ public class AutorizationActivity extends Activity {
                             e.printStackTrace();
                         }
                         Log.d("myDebugTest", "result=" + result);
-					}
-				});
-			}
-		});
-	}
+                    }
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.autorization, menu);
-		return true;
-	}
+                });
+            }
+
+        });
+        // тут закончилась авторизация
+
+        // тут начинается регистрация пользователя
+        Button regButton = (Button) this.findViewById(R.id.btnReg2);
+        regButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                AutorizationActivity.this.runOnUiThread(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        String textSynch;
+                        Log.d("myDebugTest2", "нажата кнопка run в регистрации");
+
+                        class DownloadFilesTask extends
+                                AsyncTask<Void, Void, String> {
+
+                            protected String doInBackground(Void... urls) {
+                                Log.d("myDebugTest2", "до");
+                                String iUrl2 = "http://servicetech.apphb.com/api/Auth/signup?login="
+                                        + nameUs.getText().toString()
+                                        + "&pass="
+                                        + pass.getText().toString()
+                                        + "&isAdmin=false";
+                                Log.d("myDebugTest", iUrl2);
+
+                                HttpURLConnection conn = null;
+
+                                int iDD;
+
+                                try {
+                                    HttpURLConnection conn2 = null;
+
+                                    Log.v("connection",
+                                            "Starting loading image by URL: "
+                                                    + iUrl2);
+                                    conn2 = (HttpURLConnection) new URL(iUrl2)
+                                            .openConnection();
+                                    conn2.setDoInput(true);
+                                    String content2;
+                                    content2 = "paaaaaaaaaaain";
+                                    conn2.connect();
+                                    int responseCode2 = conn2.getResponseCode();
+
+                                    if (responseCode2 == HttpURLConnection.HTTP_OK) {
+                                        InputStream in2 = conn2
+                                                .getInputStream();
+                                        BufferedReader r2 = new BufferedReader(
+                                                new InputStreamReader(in2));
+                                        content2 = r2.readLine();
+                                        Log.d("myDebugTest2", "content2="
+                                                + content2);
+                                        JSONObject subcontent2;
+                                        subcontent2 = new JSONObject(content2);
+                                        String sk = subcontent2
+                                                .getString("SessionKey");
+                                        int id = Integer.parseInt(subcontent2
+                                                .getString("response"));
+                                        iDD = id;
+                                        if (sk.length() > 30) {
+                                            return "Тут просто пока что проверка. To be continued...";
+                                        }
+
+                                    }
+
+                                } catch (MalformedURLException ex) {
+                                    Log.e("connection", ex.getMessage());
+                                } catch (IOException e) {
+                                    // TODO Auto-generated catch block
+                                    e.printStackTrace();
+                                } catch (OutOfMemoryError e) {
+                                    Log.w("connection", "Out of memory!!!");
+
+                                    return "Все очень плохо...";
+
+                                } catch (JSONException e) {
+                                    // TODO Auto-generated catch block
+                                    e.printStackTrace();
+                                }
+
+                                return "Эхехехей. Вы прошли регистрацию";
+                            }
+                        }
+
+                        String result = "";
+                        DownloadFilesTask downloadFilesTask = new DownloadFilesTask();
+                        downloadFilesTask.execute();
+                        try {
+                            result = downloadFilesTask.get();
+                        } catch (InterruptedException e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        } catch (ExecutionException e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        }
+                        Log.d("myDebugTest2", "result=" + result);
+                    }
+                });
+            }
+        });
+        // тут закончилась регистрация
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.autorization, menu);
+        return true;
+    }
 
 }

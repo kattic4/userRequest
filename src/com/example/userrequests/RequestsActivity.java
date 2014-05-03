@@ -14,8 +14,12 @@ public class RequestsActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_requests);
-		
-		Button addButton = (Button) this.findViewById(R.id.addButton);
+
+        ServerConnect sc = new ServerConnect();
+        sc.getAllRequestsClass("http://servicetech.apphb.com", "ssb9CTZD2e3SZyaP7PhUn4Yl7js4EG5z");
+
+
+        Button addButton = (Button) this.findViewById(R.id.addButton);
         addButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {

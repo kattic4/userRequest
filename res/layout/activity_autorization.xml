@@ -68,7 +68,7 @@
         android:layout_alignLeft="@+id/pass"
         android:layout_below="@+id/pass"
         android:layout_marginTop="34dp"
-        android:text="Синхронизировать" />
+        android:text="Войти" />
 
     <TextView
         android:id="@+id/result"
@@ -78,5 +78,11 @@
         android:layout_below="@+id/btnSynch"
         android:layout_marginTop="17dp"
         android:text=" " />
+    <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Регистрация"
+            android:id="@+id/btnReg2" android:layout_alignTop="@+id/result" android:layout_alignParentLeft="true"
+            android:layout_alignRight="@+id/btnSynch"/>
 
 </RelativeLayout>

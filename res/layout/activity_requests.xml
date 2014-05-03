@@ -28,14 +28,16 @@
      <Button
         android:id="@+id/delButton"
         style="?android:attr/buttonStyleSmall"
-        android:layout_width="145dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
         android:text="Удалить" />
 
     <Button
         android:id="@+id/clearButton"
-        android:layout_width="145dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
         android:text="Очистить" />
     </LinearLayout>
 
