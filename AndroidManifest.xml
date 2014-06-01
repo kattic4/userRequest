@@ -4,6 +4,9 @@
     android:versionCode="1"
     android:versionName="1.0" >
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <uses-sdk
         android:minSdkVersion="14"
         android:targetSdkVersion="19" />
@@ -27,10 +30,6 @@
         <activity
             android:name="com.example.userrequests.RequestsActivity"
             android:label="@string/title_activity_requests" >
-        </activity>
-        <activity
-            android:name="com.example.userrequests.AutorizationActivity"
-            android:label="@string/title_activity_autorization" >
         </activity>
         <activity
             android:name="com.example.userrequests.AddRequestActivity"
