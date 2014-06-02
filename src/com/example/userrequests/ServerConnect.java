@@ -14,7 +14,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Vector;
 import java.util.concurrent.ExecutionException;
 
 import android.os.AsyncTask;
@@ -39,7 +38,6 @@ public class ServerConnect {
 
                 try
                 {
-                    Log.v("connection", "Starting check login & pass URL: " + URLpass);
                     connect = (HttpURLConnection) new URL(URLpass).openConnection();
                     connect.setDoInput(true);
                     connect.setDoOutput(true);
@@ -48,7 +46,7 @@ public class ServerConnect {
                     //connect.setRequestMethod("POST");
                     //connect.setChunkedStreamingMode(0);
                     //connect.setRequestProperty("Content-Length", String.valueOf(URLpass.length()));
-                    connect.connect(); // вот это поворот =)
+                    connect.connect();
                     responseCode = connect.getResponseCode();
 
                     if (responseCode == HttpURLConnection.HTTP_OK) {
@@ -99,138 +97,6 @@ public class ServerConnect {
         return content;
     }
 
-
-    /**получение сех заявок
-     * startUrl - имя хостинга (брать из настроек пользователя)
-     * SessionKey - ключ доступа пользователя
-     * return List <RequestClass> - запись по ID
-     */
-    public List<RequestClass> getAllRequestsClass(String startUrl, String SessionKey)
-    {
-        String url = startUrl + "/api/bids/getBids?SessionKey=" + SessionKey;
-
-        String content = Connect(url);
-
-        List<RequestClass> ms = new ArrayList<RequestClass>();
-        try{
-            JSONArray jArray = new JSONArray(content);
-//            Log.d("my", String.valueOf(jArray.length()));
-            for(int i=0;i<jArray.length();i++){
-                JSONObject json_data = jArray.getJSONObject(i);
-                //тут так обрабатываем дату
-                Date date = new Date();
-                try {
-                    date = parseDate(json_data.getString("DatePost"));
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                    //Здесь ошибка, в случае если макска для даты не подошла или не была правильной
-                }
-                RequestClass RequestClass = new RequestClass(json_data.getInt("Id"),
-                        json_data.getString("BidText"),
-                        date,//сюда помещаем дату таким вот образом
-                        json_data.getInt("UserId"),
-                        json_data.getString("Status"),
-                        json_data.getInt("AdminId"),
-                        json_data.getString("RoomName"));
-                ms.add(RequestClass);
-            }
-        }
-        catch (JSONException e) {
-            Log.e("JSON", "JSON getAllRequestClass() error!");
-        }
-
-        return ms;
-    }
-
-
-    /**получение заявки по id
-     * startUrl - имя хостинга (брать из настроек пользователя)
-     * IdBid - id записи из БД Bid
-     * return List <RequestClass> - запись по ID
-     */
-    public List<RequestClass> getBidTold(String startUrl, int IdBid)
-    {
-        String url = startUrl + "/api/bids/getBidToId?IdBid=" + IdBid;
-
-        String content = Connect(url);
-
-        List<RequestClass> ms = new ArrayList<RequestClass>();
-        try{
-            JSONArray jArray = new JSONArray(content);
-//            Log.d("my", String.valueOf(jArray.length()));
-            for(int i=0;i<jArray.length();i++){
-                JSONObject json_data = jArray.getJSONObject(i);
-                Date date = new Date();
-                try {
-                    date = parseDate(json_data.getString("DatePost"));
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                    //Здесь ошибка, в случае если макска для даты не подошла или не была правильной
-                }
-                RequestClass RequestClass = new RequestClass(json_data.getInt("Id"),
-                        json_data.getString("BidText"),
-                        date,
-                        json_data.getInt("UserId"),
-                        json_data.getString("Status"),
-                        json_data.getInt("AdminId"),
-                        json_data.getString("RoomName"));
-                ms.add(RequestClass);
-            }
-        }
-        catch (JSONException e) {
-            Log.e("JSON", "JSON getBidTold() error!");
-        }
-
-        return ms;
-    }
-
-
-
-
-
-    /**удаление заявки
-     * startUrl - имя хостинга (брать из настроек пользователя)
-     * SessionKey - ключ доступа пользователя
-     * IdRecord - id удаляемой записи
-     *
-     * return Boolean true  - если у нас удаление произошло успешно
-     *                false - если с удалением возникли проблемы
-     */
-    public boolean removeRequest(String startUrl, String SessionKey, Integer IdRecord){
-        String ids = IdRecord.toString();
-        try {
-            ids = URLEncoder.encode(ids, "utf-8");
-        } catch (UnsupportedEncodingException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        String reqUrl = startUrl + "/api/bids/removeBid?SessionKey="
-                + SessionKey + "&idRecord" + ids;
-
-        String content = Connect(reqUrl);
-        return Boolean.parseBoolean(content);
-    }
-
-
-    public boolean getIsAdmin(String startUrl, String SessionKey)
-    {
-        String reqUrl = startUrl + "/api/users/getIsAdmin?SessionKey="
-                + SessionKey;
-        String content = Connect(reqUrl);
-        return Boolean.parseBoolean(content);
-    }
-
-
-    public Integer editRequest(String startUrl, String SessionKey, Integer IdRecord, String RoomName, String Text)
-    {
-        String setUrl  = startUrl + "/api/bids/addBid?SessionKey=" + SessionKey +
-                "&RoomName=" + RoomName +
-                "&Text=" + Text ;
-
-        String content = Connect(setUrl);
-        return Integer.parseInt(content);
-    }
-
     private static Date parseDate(final String stringDate) throws ParseException {
         return FORMAT.parse(stringDate);
     }
@@ -269,7 +135,7 @@ public class ServerConnect {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
         String content = Connect(reqUrl);
-        Log.d("myDebugTest", "reqUrl=" + reqUrl);
+        //Log.d("myDebugTest", "reqUrl=" + reqUrl);
         //Log.d("myDebugTest", "content=" + content);
         JSONObject subcontent2;
         try {
@@ -293,7 +159,9 @@ public class ServerConnect {
      * Workstation
      * return int response  - id добавленной записи
      */
-    public Integer addRequest(String startUrl, String SessionKey, String roomName, String text, String tema, String sourceSoftware, String softwareName, String networkOrInventoryNumber, String workstation)
+    public Integer addBid(String startUrl, String SessionKey, String roomName, String text, String tema,
+                              String sourceSoftware, String softwareName, String networkOrInventoryNumber,
+                              String workstation)
     {
         String setUrl  = null;
         try {
@@ -310,14 +178,220 @@ public class ServerConnect {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
 
-        Log.d("myDebugTest", "reqUrl=" + setUrl);
+        //Log.d("myDebugTest", "reqUrl=" + setUrl);
         String content = Connect(setUrl);
-        Log.d("myDebugTest", "content=" + content);
+        //Log.d("myDebugTest", "content=" + content);
         if(responseCode == -404){
             return responseCode;
         }
         return Integer.parseInt(content);
     }
 
+    /**получение заявки по id
+     * startUrl - имя хостинга (брать из настроек пользователя)
+     * IdBid - id записи из БД Bid
+     * return List <Bid> - запись по ID
+     */
+    public Bid getBidTold(String startUrl, int IdBid)
+    {
+        String url = startUrl + "/api/bids/getBidToId?IdBid=" + IdBid;
+        //Log.d("myDebugTest", "reqUrl=" + url);
 
+        String content = Connect(url);
+        //Log.d("myDebugTest", "content=" + content);
+
+        Bid requestClass = null;
+        try{
+            {
+                JSONObject json_data = new JSONObject(content);// jArray.getJSONObject(i);
+                Date date = new Date();
+                try {
+                    date = parseDate(json_data.getString("DataPost"));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                    //Здесь ошибка, в случае если макска для даты не подошла или не была правильной
+                }
+
+                requestClass = new Bid(
+                        json_data.getInt("Id"),
+                        json_data.isNull("BidText") ? "" : json_data.getString("BidText"),
+                        date,
+                        json_data.getInt("UserId"),
+                        json_data.isNull("Status") ? "" : json_data.getString("Status"),
+                        json_data.isNull("AdminId") ? -1 : json_data.getInt("AdminId"),
+                        json_data.isNull("RoomName") ? "" : json_data.getString("RoomName"),
+                        json_data.isNull("Tema") ? "" : json_data.getString("Tema"),
+                        json_data.isNull("SourceSoftware") ? "" : json_data.getString("SourceSoftware"),
+                        json_data.isNull("SoftwareName") ? "" : json_data.getString("SoftwareName"),
+                        json_data.isNull("NetworkOrInventoryNumber") ? "" : json_data.getString("NetworkOrInventoryNumber"),
+                        json_data.isNull("Workstation") ? "" : json_data.getString("Workstation"),
+                        json_data.isNull("FIOShort") ? "" : json_data.getString("FIOShort")
+                        );
+            }
+        }
+        catch (JSONException e) {
+            Log.e("myDebugTest", "JSON getBidTold() error!");
+        }
+
+        return requestClass;
+    }
+
+
+    /**получение сех заявок
+     * startUrl - имя хостинга (брать из настроек пользователя)
+     * SessionKey - ключ доступа пользователя
+     * return List <Bid>
+     */
+    public List<Bid> getAllBid(String startUrl, String SessionKey)
+    {
+        String url = startUrl + "/api/bids/getBids?SessionKey=" + SessionKey;
+        //Log.d("myDebugTest", "reqUrl=" + url);
+
+        String content = Connect(url);
+        //Log.d("myDebugTest", "content=" + content);
+
+        List<Bid> resultBids = new ArrayList<Bid>();
+        try{
+            JSONArray jArray = new JSONArray(content);
+            for(int i=0;i<jArray.length();i++){
+                JSONObject json_data = jArray.getJSONObject(i);
+                //тут так обрабатываем дату
+                Date date = new Date();
+                try {
+                    date = parseDate(json_data.getString("DataPost"));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                    //Здесь ошибка, в случае если макска для даты не подошла или не была правильной
+                }
+                Bid RequestClass = new Bid(
+                        json_data.getInt("Id"),
+                        json_data.isNull("BidText") ? "" : json_data.getString("BidText"),
+                        date,
+                        json_data.getInt("UserId"),
+                        json_data.isNull("Status") ? "" : json_data.getString("Status"),
+                        json_data.isNull("AdminId") ? -1 : json_data.getInt("AdminId"),
+                        json_data.isNull("RoomName") ? "" : json_data.getString("RoomName"),
+                        json_data.isNull("Tema") ? "" : json_data.getString("Tema"),
+                        json_data.isNull("SourceSoftware") ? "" : json_data.getString("SourceSoftware"),
+                        json_data.isNull("SoftwareName") ? "" : json_data.getString("SoftwareName"),
+                        json_data.isNull("NetworkOrInventoryNumber") ? "" : json_data.getString("NetworkOrInventoryNumber"),
+                        json_data.isNull("Workstation") ? "" : json_data.getString("Workstation"),
+                        json_data.isNull("FIOShort") ? "" : json_data.getString("FIOShort")
+                );
+                resultBids.add(RequestClass);
+            }
+        }
+        catch (JSONException e) {
+            Log.e("JSON", "JSON getAllRequestClass() error!");
+        }
+
+        return resultBids;
+    }
+
+    /**удаление заявки
+     * startUrl - имя хостинга (брать из настроек пользователя)
+     * SessionKey - ключ доступа пользователя
+     * IdRecord - id удаляемой записи
+     *
+     * return Boolean true  - если у нас удаление произошло успешно
+     *                false - если с удалением возникли проблемы
+     */
+    public boolean removeBid(String startUrl, String SessionKey, Integer IdRecord){
+        String ids = IdRecord.toString();
+        try {
+            ids = URLEncoder.encode(ids, "utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        String reqUrl = startUrl + "/api/bids/removeBid?SessionKey="
+                + SessionKey + "&idRecord=" + ids;
+        //Log.d("myDebugTest", "reqUrl=" + reqUrl);
+
+        String content = Connect(reqUrl);
+        //Log.d("myDebugTest", "content=" + content);
+
+        return Boolean.parseBoolean(content);
+    }
+
+    public Integer editBid(String startUrl, String SessionKey, int idRecord, String roomName, String text, String tema,
+                          String sourceSoftware, String softwareName, String networkOrInventoryNumber,
+                          String workstation)
+    {
+        String setUrl  = null;
+        try {
+            setUrl = startUrl + "/api/bids/editBid?" +
+                    "SessionKey=" + SessionKey +
+                    "&IdRecord=" +  idRecord +
+                    "&RoomName=" + URLEncoder.encode(roomName, "utf-8") +
+                    "&Text=" + URLEncoder.encode(text, "utf-8") +
+                    "&Tema=" + URLEncoder.encode(tema, "utf-8") +
+                    "&SourceSoftware=" + URLEncoder.encode(sourceSoftware, "utf-8") +
+                    "&SoftwareName=" + URLEncoder.encode(softwareName, "utf-8") +
+                    "&NetworkOrInventoryNumber=" + URLEncoder.encode(networkOrInventoryNumber, "utf-8") +
+                    "&Workstation=" + URLEncoder.encode(workstation, "utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+
+        //Log.d("myDebugTest", "reqUrl=" + setUrl);
+        String content = Connect(setUrl);
+        //Log.d("myDebugTest", "content=" + content);
+        if(responseCode == -404){
+            return responseCode;
+        }
+        return Integer.parseInt(content);
+    }
+
+    public Integer setStatus(String startUrl, String SessionKey, int idRecord, String status){
+        String setUrl  = null;
+        try {
+            setUrl = startUrl + "/api/bids/setStatus?" +
+                    "SessionKey=" + SessionKey +
+                    "&IdRecord=" +  idRecord +
+                    "&Status=" + URLEncoder.encode(status, "utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+
+        //Log.d("myDebugTest", "reqUrl=" + setUrl);
+        String content = Connect(setUrl);
+        //Log.d("myDebugTest", "content=" + content);
+        if(responseCode == -404){
+            return responseCode;
+        }
+        return Integer.parseInt(content);
+    }
+
+    public boolean getIsAdmin(String startUrl, String SessionKey)
+    {
+        String reqUrl = startUrl + "/api/users/getIsAdmin?SessionKey=" + SessionKey;
+        String content = Connect(reqUrl);
+        return Boolean.parseBoolean(content);
+    }
+
+    public List<Spravochnik> getSpravochniki(String startUrl){
+        String setUrl = startUrl + "/api/Sprav/getSpravochniki";
+        Log.d("myDebugTest", "reqUrl=" + setUrl);
+        String content = Connect(setUrl);
+        Log.d("myDebugTest", "content=" + content);
+
+        List<Spravochnik> resultSprav = new ArrayList<Spravochnik>();
+        try{
+            JSONArray jArray = new JSONArray(content);
+            for(int i=0;i<jArray.length();i++){
+                JSONObject json_data = jArray.getJSONObject(i);
+
+                Spravochnik spravochnik = new Spravochnik(
+                        json_data.getInt("Id"),
+                        json_data.isNull("SpravochnicValue") ? "" : json_data.getString("SpravochnicValue"),
+                        json_data.isNull("SpravochnicType") ? "" : json_data.getString("SpravochnicType")
+                );
+                resultSprav.add(spravochnik);
+            }
+        }
+        catch (JSONException e) {
+            Log.e("JSON", "JSON getSpravochniki() error!");
+        }
+        return resultSprav;
+    }
 }
