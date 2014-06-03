@@ -29,6 +29,9 @@
         </activity>
         <activity android:name="BidList"></activity>
         <activity android:name="AddBidActivity"></activity>
+        <activity android:name="ViewBidActivity"></activity>
+        <activity android:name="EditBidActivity"></activity>
+        <activity android:name="SetStatusBidActivity"></activity>
     </application>
 
 </manifest>

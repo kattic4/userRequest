@@ -29,9 +29,10 @@ public class BidList extends ListActivity {
     protected void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
         U_id = ((TextView)v.findViewById(R.id.textId)).getText().toString();
+        ViewBidActivity.idRecord = U_id;
         //Log.d("myDebugTest", "position id: " + U_id);
-        //Intent intent = new Intent(this, SportListOfDate.class);
-        //startActivity(intent);
+        Intent intent = new Intent(this, ViewBidActivity.class);
+        startActivity(intent);
     }
 
     @Override
@@ -44,7 +45,7 @@ public class BidList extends ListActivity {
         List<Bid> bids = serverConnect.getAllBid(MainActivity.startUrl, MainActivity.sessionKey);
         for(Bid bid : bids){
             HashMap<String, String> hm = new HashMap<String, String>();
-            hm.put(Title, bid.bidText);
+            hm.put(Title, bid.Tema);
 
             Locale locale = new Locale("ru", "RU");
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd MM yyyy HH:mm", locale);
@@ -61,6 +62,12 @@ public class BidList extends ListActivity {
         setListAdapter(adapter);
         //LayoutAnimationController controller = AnimationUtils.loadLayoutAnimation(this, R.anim.list_layout_controller);
         //getListView().setLayoutAnimation(controller);
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
     }
 
     @Override

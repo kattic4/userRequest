@@ -3,7 +3,6 @@ package com.example.userrequests;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -11,7 +10,7 @@ import android.widget.*;
 
 import java.util.List;
 
-public class AddBidActivity extends Activity implements View.OnClickListener{
+public class EditBidActivity extends Activity implements View.OnClickListener{
 
     private ServerConnect serverConnect;
     private EditText etTema;
@@ -24,6 +23,7 @@ public class AddBidActivity extends Activity implements View.OnClickListener{
     public String[] data;
     private String spNameAud;
 
+    public static String idRecord = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +72,31 @@ public class AddBidActivity extends Activity implements View.OnClickListener{
             public void onNothingSelected(AdapterView<?> arg0) {
             }
         });
+
+        Bid bid = serverConnect.getBidTold(MainActivity.startUrl, Integer.valueOf(idRecord));
+
+        if(bid == null || bid.id == -1){
+            Toast.makeText(getApplicationContext(), "Ошибка! Запись отсутствует.", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(this, BidList.class);
+            startActivity(intent);
+        }
+        else{
+            //выполняем действия
+            etTema.setText(bid.Tema);
+            etTextBid.setText(bid.bidText);
+            etPO.setText(bid.SourceSoftware);
+            etNamePO.setText(bid.SoftwareName);
+            etSeti.setText(bid.NetworkOrInventoryNumber);
+            etWorkstation.setText(bid.Workstation);
+            index = 0;
+            for(String str : data){
+                if(str.equals(bid.roomName)){
+                    spNumAud.setSelection(index);
+                    break;
+                }
+                index++;
+            }
+        }
     }
 
     @Override
@@ -88,15 +113,14 @@ public class AddBidActivity extends Activity implements View.OnClickListener{
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        menu.add("Добавить");
+        menu.add("Сохранить изменения");
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getTitle().equals("Добавить")){
-
-            int response = serverConnect.addBid(MainActivity.startUrl, MainActivity.sessionKey, spNameAud, etTextBid.getText().toString(),
+        if(item.getTitle().equals("Сохранить изменения")){
+            int response = serverConnect.editBid(MainActivity.startUrl, MainActivity.sessionKey,Integer.valueOf(this.idRecord), spNameAud, etTextBid.getText().toString(),
                     etTema.getText().toString(), etPO.getText().toString(), etNamePO.getText().toString(), etSeti.getText().toString(), etWorkstation.getText().toString());
             if(response == -404){
                 Toast.makeText(getApplicationContext(), "Отсутствует подключение к интернету", Toast.LENGTH_SHORT).show();
@@ -107,8 +131,16 @@ public class AddBidActivity extends Activity implements View.OnClickListener{
             else if (response == -3){
                 Toast.makeText(getApplicationContext(), "действие ключа истекло или передан неверный ключ", Toast.LENGTH_SHORT).show();
             }
-
-            Intent intent = new Intent(this, BidList.class);
+            else if (response == -5){
+                Toast.makeText(getApplicationContext(), "Запись по данному id отсутствует", Toast.LENGTH_SHORT).show();
+            }
+            else if (response == -7){
+                Toast.makeText(getApplicationContext(), "у вас нет доступа на редактирование данной записи, запись может редактировать только создатель", Toast.LENGTH_SHORT).show();
+            }
+            else if (response == 0){
+                //Toast.makeText(getApplicationContext(), "Запись удачно изменена", Toast.LENGTH_SHORT).show();
+            }
+            Intent intent = new Intent(this, ViewBidActivity.class);
             startActivity(intent);
         }
         return super.onOptionsItemSelected(item);

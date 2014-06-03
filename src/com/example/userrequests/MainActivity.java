@@ -17,6 +17,7 @@ public class MainActivity extends Activity {
     public static String startUrl = "http://servicetech.apphb.com";
     //public static String startUrl = "http://servicetech.somee.com";
     public static String sessionKey = "oawAmqtqq0HnAAh6IYZlVyPVGqAUnuzf";
+    public static Boolean idAdmin = false;
     private Response response = new Response();
 
     @Override
@@ -28,8 +29,6 @@ public class MainActivity extends Activity {
         final EditText nameUs = (EditText) this.findViewById(R.id.nameUs);
         final EditText pass = (EditText) this.findViewById(R.id.pass);
         final EditText fio = (EditText) this.findViewById(R.id.fio);
-        nameUs.setText("saintgluk");
-        pass.setText("51392491");
 
         // начинаем авторизацию на сервере
         Button synchButton = (Button) this.findViewById(R.id.btnSynch);
@@ -37,16 +36,16 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v) {
                 //Log.d("myDebugTest", "нажата кнопка run в синхронизации");
-                //response = serverConnect.login(startUrl, nameUs.getText().toString(), pass.getText().toString());
-                //sessionKey = response.sessionKey;
-                response.response = 0;
-                Log.d("myDebugTest", "result=" + sessionKey);
+                response = serverConnect.login(startUrl, nameUs.getText().toString(), pass.getText().toString());
+                sessionKey = response.sessionKey;
+                //Log.d("myDebugTest", "result=" + sessionKey);
 
                 if(response.response == -404){
                     Toast.makeText(getApplicationContext(), "Отсутствует подключение к интернету", Toast.LENGTH_SHORT).show();
                 }
                 else if (response.response == 0){
-                    Toast.makeText(getApplicationContext(), sessionKey, Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getApplicationContext(), sessionKey, Toast.LENGTH_SHORT).show();
+                    idAdmin = serverConnect.getIsAdmin(startUrl, sessionKey);
                     Intent intent = new Intent(MainActivity.this, BidList.class);
                     startActivity(intent);
                 }
@@ -65,15 +64,16 @@ public class MainActivity extends Activity {
                 response = serverConnect.signup(startUrl, nameUs.getText().toString(), pass.getText().toString(), fio.getText().toString(), false);
                 sessionKey = response.sessionKey;
 
-                Log.d("myDebugTest", "result=" + sessionKey + " = " + response.response);
+                //Log.d("myDebugTest", "result=" + sessionKey + " = " + response.response);
 
                 if(response.response == -404){
                     Toast.makeText(getApplicationContext(), "Отсутствует подключение к интернету", Toast.LENGTH_SHORT).show();
                 }
                 else if (response.response == 0){
-                    Toast.makeText(getApplicationContext(), sessionKey, Toast.LENGTH_SHORT).show();
-                    //Intent intent = new Intent(AutorizationActivity.this, MainActivity.class);
-                    //startActivity(intent);
+                    //Toast.makeText(getApplicationContext(), sessionKey, Toast.LENGTH_SHORT).show();
+                    idAdmin = serverConnect.getIsAdmin(startUrl, sessionKey);
+                    Intent intent = new Intent(MainActivity.this, BidList.class);
+                    startActivity(intent);
                 }
                 else if (response.response == -1){
                     Toast.makeText(getApplicationContext(), "Неверный логин или пароль. Отказано в авторизации", Toast.LENGTH_SHORT).show();
@@ -85,7 +85,7 @@ public class MainActivity extends Activity {
 
         });
 
-        Button testButton = (Button) this.findViewById(R.id.test);
+        /*Button testButton = (Button) this.findViewById(R.id.test);
         testButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -93,7 +93,7 @@ public class MainActivity extends Activity {
 
             }
 
-        });
+        });    */
 
     }
 
@@ -104,7 +104,13 @@ public class MainActivity extends Activity {
         return true;
     }
 
-
+    @Override
+    public void onBackPressed() {
+        Intent broadcastIntent = new Intent();
+        broadcastIntent.setAction("To_log_out_string");
+        sendBroadcast(broadcastIntent);
+        finish();
+    }
 
     //кнопка добавления_________________________________________________________________________________________________
     /*int response = serverConnect.addRequest(startUrl, sessionKey, "А555", "Текст с андроид клиента", "Тема анжроида", "sourceSoftware a", "softwareName a", "networkOrInventoryNumber a", "workstation a");
