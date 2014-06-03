@@ -278,7 +278,7 @@ public class ServerConnect {
                         json_data.isNull("Workstation") ? "" : json_data.getString("Workstation"),
                         json_data.isNull("FIOShort") ? "" : json_data.getString("FIOShort")
                 );
-                resultBids.add(RequestClass);
+                resultBids.add(0, RequestClass);
             }
         }
         catch (JSONException e) {

@@ -1,5 +1,6 @@
 package com.example.userrequests;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.app.Activity;
 import android.util.Log;
@@ -13,9 +14,9 @@ public class MainActivity extends Activity {
 
     public ServerConnect serverConnect;
 
-    public String startUrl = "http://servicetech.apphb.com";
-    //public String startUrl = "http://servicetech.somee.com";
-    public String sessionKey = "oawAmqtqq0HnAAh6IYZlVyPVGqAUnuzf";
+    public static String startUrl = "http://servicetech.apphb.com";
+    //public static String startUrl = "http://servicetech.somee.com";
+    public static String sessionKey = "oawAmqtqq0HnAAh6IYZlVyPVGqAUnuzf";
     private Response response = new Response();
 
     @Override
@@ -36,9 +37,9 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v) {
                 //Log.d("myDebugTest", "нажата кнопка run в синхронизации");
-                response = serverConnect.login(startUrl, nameUs.getText().toString(), pass.getText().toString());
-                sessionKey = response.sessionKey;
-
+                //response = serverConnect.login(startUrl, nameUs.getText().toString(), pass.getText().toString());
+                //sessionKey = response.sessionKey;
+                response.response = 0;
                 Log.d("myDebugTest", "result=" + sessionKey);
 
                 if(response.response == -404){
@@ -46,8 +47,8 @@ public class MainActivity extends Activity {
                 }
                 else if (response.response == 0){
                     Toast.makeText(getApplicationContext(), sessionKey, Toast.LENGTH_SHORT).show();
-                    //Intent intent = new Intent(AutorizationActivity.this, MainActivity.class);
-                    //startActivity(intent);
+                    Intent intent = new Intent(MainActivity.this, BidList.class);
+                    startActivity(intent);
                 }
                 else if (response.response == -1){
                     Toast.makeText(getApplicationContext(), "Неверный логин или пароль. Отказано в авторизации", Toast.LENGTH_SHORT).show();

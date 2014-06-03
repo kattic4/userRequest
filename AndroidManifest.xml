@@ -27,14 +27,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name="com.example.userrequests.RequestsActivity"
-            android:label="@string/title_activity_requests" >
-        </activity>
-        <activity
-            android:name="com.example.userrequests.AddRequestActivity"
-            android:label="@string/title_activity_add_request" >
-        </activity>
+        <activity android:name="BidList"></activity>
+        <activity android:name="AddBidActivity"></activity>
     </application>
 
 </manifest>
